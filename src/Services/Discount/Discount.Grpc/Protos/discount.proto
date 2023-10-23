@@ -1,0 +1,40 @@
+syntax = "proto3"; //defining protobuf version
+
+option csharp_namespace = "Discount.Grpc.Protos"; //Optional
+
+//Grpc Service
+service DiscountProtoService {
+//  rpc MethodName	(ParametersModel)	returns (OutputModel)
+	rpc GetDiscount (GetDiscountRequest) returns (CouponModel);
+	rpc CreateDiscount (CreateDiscountRequest) returns (CouponModel);
+	rpc UpdateDiscount (UpdateDiscountRequest) returns (CouponModel);
+	rpc DeleteDiscount (DeleteDiscountRequest) returns (DeleteDiscountResponse);
+}
+
+//defining models
+message GetDiscountRequest {
+	string productName = 1; 
+}
+
+message CouponModel {
+	int32 id = 1;				//1 is order of id the property for CouponModel
+	string productName = 2;
+	string description = 3;
+	int32 amount = 4;
+}
+
+message CreateDiscountRequest { //We can use CouponModel instead of CreateDiscountRequest above
+	CouponModel coupon = 1;		//Defining a complex type
+}
+
+message UpdateDiscountRequest {
+	CouponModel coupon = 1;
+}
+
+message DeleteDiscountRequest {
+	string productName = 1;
+}
+
+message DeleteDiscountResponse {
+	bool isSuccess = 1;
+}
