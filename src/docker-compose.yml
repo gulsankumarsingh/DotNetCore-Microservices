@@ -5,7 +5,7 @@ services:
     image: mongo
 
   basketdb:
-    image: redis:alpine
+    image: redis
   
   discountdb:
     image: postgres
@@ -34,10 +34,17 @@ services:
       context: .
       dockerfile: Services/Discount/Discount.API/Dockerfile
 
+  discount.grpc:
+    image: ${DOCKER_REGISTRY-}discountgrpc
+    build:
+      context: .
+      dockerfile: Services/Discount/Discount.Grpc/Dockerfile
+
 volumes:
   mongo_data: 
   portainer_data:
   postgres_data:
   pgadmin_data:
+
 
 
