@@ -5,11 +5,6 @@ using Ordering.Application.Contracts.Infrastructure;
 using Ordering.Application.Contracts.Persistence;
 using Ordering.Application.Models;
 using Ordering.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
 {
@@ -31,7 +26,7 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
         public async Task<int> Handle(CheckoutOrderCommand request, CancellationToken cancellationToken)
         {
             var orderEntity = _mapper.Map<Order>(request);
-            var newOrder = await _orderRepository.UpdateAsync(orderEntity);
+            var newOrder = await _orderRepository.AddAsync(orderEntity);
 
             _logger.LogInformation($"Order {newOrder.Id} is successfully creted");
             await SendMail(newOrder);
