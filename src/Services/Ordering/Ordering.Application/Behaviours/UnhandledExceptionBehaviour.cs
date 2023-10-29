@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using Ordering.Application.Exceptions;
 
 namespace Ordering.Application.Behaviours
 {
@@ -17,6 +18,10 @@ namespace Ordering.Application.Behaviours
             try
             {
                 return await next();
+            }
+            catch (ValidationException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {

@@ -1,7 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Ordering.Application.Exceptions;
+using Ordering.API.Filters;
 using Ordering.Application.Features.Orders.Commands.CheckoutOrder;
 using Ordering.Application.Features.Orders.Commands.DeleteOrder;
 using Ordering.Application.Features.Orders.Commands.UpdateOrder;
@@ -11,6 +10,7 @@ namespace Ordering.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+    [ExceptionFilter]
     public class OrderController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -32,14 +32,14 @@ namespace Ordering.API.Controllers
         [HttpPost(Name = "CheckoutOrder")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> CheckoutOrder([FromBody]CheckoutOrderCommand command)
-        { 
+        {
             var orders = await _mediator.Send(command);
             return Ok(orders);
         }
 
         [HttpPut(Name = "UpdateOrder")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(NotFoundExpection))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type=typeof(string))]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> UpdateOrder([FromBody] UpdateOrderCommand command)
         {
@@ -47,13 +47,14 @@ namespace Ordering.API.Controllers
             return NoContent();
         }
 
-        [HttpPut(Name = "DeleteOrder")]
+        [HttpDelete(Name = "DeleteOrder")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundExpection))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         [ProducesDefaultResponseType]
-        public async Task<IActionResult> DeleteOrder([FromBody] DeleteOrderCommand command)
+        public async Task<IActionResult> DeleteOrder(int id)
         {
-            await _mediator.Send(command);
+            DeleteOrderCommand deleteOrder = new DeleteOrderCommand { Id = id };
+            await _mediator.Send(deleteOrder);
             return NoContent();
         }
     }

@@ -26,7 +26,9 @@ namespace Ordering.Application.Features.Orders.Commands.DeleteOrder
 
             if (orderToDelete == null)
             {
-                throw new NotFoundExpection(nameof(Order), request.Id);
+                var error = new NotFoundException(nameof(Order), request.Id);
+                _logger.LogInformation($"Order with Id: {request.Id} was not found", error);
+                throw error;
             }
 
             await _orderRepository.DeleteAsync(orderToDelete);

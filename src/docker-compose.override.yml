@@ -30,11 +30,13 @@ services:
   orderdb:
     container_name: orderdb
     environment:
-      MSSQL_SA_PASSWORD: "PasswordSql"
-      ACCEPT_EULA: Y
+      SA_PASSWORD: "SqlLog@07659310s"
+      ACCEPT_EULA: "Y"
     restart: always
     ports:
      - "1433:1433"
+    volumes:
+     - sql_data:/var/opt/mssql 
 
   pgadmin:
     container_name: pgadmin
@@ -100,4 +102,15 @@ services:
       - discountdb
     ports:
       - "8003:8003"
+
+
+  ordering.api:
+    container_name: ordering.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:OrderingConnectionString=Server=orderdb;Database=OrderDb;User Id=sa;Password=SqlLog@07659310s;TrustServerCertificate=True;"
+    depends_on:
+      - orderdb
+    ports:
+      - "8004:80"
 
