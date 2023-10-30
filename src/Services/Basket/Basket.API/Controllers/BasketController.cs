@@ -1,6 +1,7 @@
 ﻿using Basket.API.Entities;
 using Basket.API.GrpcServices;
 using Basket.API.Repositories;
+using EventBus.Messages.Events;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,6 +49,12 @@ namespace Basket.API.Controllers
             await _basketRepository.DeleteBasket(username);
             return Ok();
         }
+
+
+        //public async Task<IActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
+        //{
+
+        //}
 
     }
 }
