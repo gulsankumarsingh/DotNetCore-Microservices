@@ -36,12 +36,12 @@ builder.Services.AddMassTransit(config =>
     });
 });
 
-builder.Services.Configure<MassTransitHostOptions>(options =>
-{
-    options.WaitUntilStarted = true;
-    options.StartTimeout = TimeSpan.FromSeconds(30);
-    options.StopTimeout = TimeSpan.FromMinutes(1);
-});
+//builder.Services.Configure<MassTransitHostOptions>(options =>
+//{
+//    options.WaitUntilStarted = true;
+//    options.StartTimeout = TimeSpan.FromSeconds(30);
+//    options.StopTimeout = TimeSpan.FromMinutes(1);
+//});
 
 //Automapper Configuarion
 builder.Services.AddAutoMapper(typeof(Program));

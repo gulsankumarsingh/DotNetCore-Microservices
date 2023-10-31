@@ -33,13 +33,12 @@ builder.Services.AddMassTransit(config =>
     });
 });
 
-
-builder.Services.Configure<MassTransitHostOptions>(options =>
-{
-    options.WaitUntilStarted = true;
-    options.StartTimeout = TimeSpan.FromSeconds(30);
-    options.StopTimeout = TimeSpan.FromMinutes(1);
-});
+//builder.Services.Configure<MassTransitHostOptions>(options =>
+//{
+//    options.WaitUntilStarted = true;                //Application won't start until rabbitmq is connected
+//    options.StartTimeout = TimeSpan.FromSeconds(30);
+//    options.StopTimeout = TimeSpan.FromMinutes(1);
+//});
 
 //General Configuration
 builder.Services.AddAutoMapper(typeof(Program));
