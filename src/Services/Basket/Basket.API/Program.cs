@@ -43,6 +43,9 @@ builder.Services.Configure<MassTransitHostOptions>(options =>
     options.StopTimeout = TimeSpan.FromMinutes(1);
 });
 
+//Automapper Configuarion
+builder.Services.AddAutoMapper(typeof(Program));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
