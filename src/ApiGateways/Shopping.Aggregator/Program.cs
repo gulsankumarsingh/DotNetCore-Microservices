@@ -15,13 +15,16 @@ builder.Services.AddTransient<LoggingDelegatingHandler>();
 
 //Configuring HttpClient for services
 builder.Services.AddHttpClient<ICatalogService, CatalogService>(ser => 
-    ser.BaseAddress = new Uri(builder.Configuration["ApiSettings:CatalogUrl"]));
+    ser.BaseAddress = new Uri(builder.Configuration["ApiSettings:CatalogUrl"]))
+    .AddHttpMessageHandler<LoggingDelegatingHandler>();
 
 builder.Services.AddHttpClient<IBasketService, BasketService>(ser =>
-    ser.BaseAddress = new Uri(builder.Configuration["ApiSettings:BasketUrl"]));
+    ser.BaseAddress = new Uri(builder.Configuration["ApiSettings:BasketUrl"]))
+    .AddHttpMessageHandler<LoggingDelegatingHandler>();
 
 builder.Services.AddHttpClient<IOrderService, OrderService>(ser =>
-    ser.BaseAddress = new Uri(builder.Configuration["ApiSettings:OrderingUrl"]));
+    ser.BaseAddress = new Uri(builder.Configuration["ApiSettings:OrderingUrl"]))
+    .AddHttpMessageHandler<LoggingDelegatingHandler>();
 
 var app = builder.Build();
 app.UseSerilogRequestLogging();
