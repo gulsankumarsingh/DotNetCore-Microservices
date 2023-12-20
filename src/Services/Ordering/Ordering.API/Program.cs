@@ -1,3 +1,4 @@
+using Common.Logging;
 using EventBus.Messages.Common;
 using MassTransit;
 using Ordering.API.EventBusConsumer;
@@ -5,9 +6,10 @@ using Ordering.API.Extensions;
 using Ordering.Application.StartupExtensions;
 using Ordering.Infrastructure.Persistence;
 using Ordering.Infrastructure.StatupExtensions;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Host.UseSerilog(SeriLogger.Configure);
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -45,6 +47,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<BasketCheckoutConsumer>();
 
 var app = builder.Build();
+app.UseSerilogRequestLogging();
 app.MigrateDatabase<OrderContext>((context, services) =>
 {
     var logger = services.GetService<ILogger<OrderContextSeed>>();

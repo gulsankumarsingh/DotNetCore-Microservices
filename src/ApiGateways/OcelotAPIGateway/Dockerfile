@@ -5,15 +5,18 @@ WORKDIR /app
 EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["ApiGateways/OcelotAPIGateway/OcelotAPIGateway.csproj", "ApiGateways/OcelotAPIGateway/"]
-RUN dotnet restore "ApiGateways/OcelotAPIGateway/OcelotAPIGateway.csproj"
+COPY ["BuildingBlocks/Common.Logging/Common.Logging.csproj", "BuildingBlocks/Common.Logging/"]
+RUN dotnet restore "./ApiGateways/OcelotAPIGateway/./OcelotAPIGateway.csproj"
 COPY . .
 WORKDIR "/src/ApiGateways/OcelotAPIGateway"
-RUN dotnet build "OcelotAPIGateway.csproj" -c Release -o /app/build
+RUN dotnet build "./OcelotAPIGateway.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "OcelotAPIGateway.csproj" -c Release -o /app/publish /p:UseAppHost=false
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./OcelotAPIGateway.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

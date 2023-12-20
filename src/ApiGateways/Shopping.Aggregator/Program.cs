@@ -1,14 +1,17 @@
+using Common.Logging;
+using Serilog;
 using Shopping.Aggregator.Services;
-using System.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Host.UseSerilog(SeriLogger.Configure);
 // Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<LoggingDelegatingHandler>();
 
 //Configuring HttpClient for services
 builder.Services.AddHttpClient<ICatalogService, CatalogService>(ser => 
@@ -21,6 +24,7 @@ builder.Services.AddHttpClient<IOrderService, OrderService>(ser =>
     ser.BaseAddress = new Uri(builder.Configuration["ApiSettings:OrderingUrl"]));
 
 var app = builder.Build();
+app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

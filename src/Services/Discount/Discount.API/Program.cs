@@ -1,8 +1,10 @@
+using Common.Logging;
 using Discount.API.Extensions;
 using Discount.API.Repositories;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Host.UseSerilog(SeriLogger.Configure);
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -12,7 +14,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IDiscountRepository, DiscountRepository>();
 var app = builder.Build();
-
+app.UseSerilogRequestLogging();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
