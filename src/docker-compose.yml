@@ -70,6 +70,12 @@ services:
       context: .
       dockerfile: ApiGateways/Shopping.Aggregator/Dockerfile
 
+  healthstatus:
+    image: ${DOCKER_REGISTRY-}healthstatus
+    build:
+      context: .
+      dockerfile: WebApps/HealthStatus/Dockerfile
+
 volumes:
   mongo_data: 
   portainer_data:
@@ -77,6 +83,7 @@ volumes:
   pgadmin_data:
   sql_data:
   elasticsearch-data:
+
 
 
 

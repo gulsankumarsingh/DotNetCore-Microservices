@@ -1,4 +1,7 @@
 using Common.Logging;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Shopping.Aggregator.Helper;
 using Shopping.Aggregator.Services;
@@ -15,7 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<LoggingDelegatingHandler>();
 
 //Configuring HttpClient for services
-builder.Services.AddHttpClient<ICatalogService, CatalogService>(ser => 
+builder.Services.AddHttpClient<ICatalogService, CatalogService>(ser =>
     ser.BaseAddress = new Uri(builder.Configuration["ApiSettings:CatalogUrl"]))
     .AddHttpMessageHandler<LoggingDelegatingHandler>()
     .AddPolicyHandler(PolicySetupHelper.GetRetryPolicy())
@@ -35,6 +38,11 @@ builder.Services.AddHttpClient<IOrderService, OrderService>(ser =>
     .AddPolicyHandler(PolicySetupHelper.GetRetryPolicy())
     .AddPolicyHandler(PolicySetupHelper.GetCircuitBreakerPolicy());
 
+//Adding health checks
+builder.Services.AddHealthChecks()
+    .AddUrlGroup(new Uri($"{builder.Configuration["ApiSettings:CatalogUrl"]}/swagger/index.html"), "Catalog Service", HealthStatus.Degraded)
+    .AddUrlGroup(new Uri($"{builder.Configuration["ApiSettings:BasketUrl"]}/swagger/index.html"), "Basket Service", HealthStatus.Degraded)
+    .AddUrlGroup(new Uri($"{builder.Configuration["ApiSettings:OrderingUrl"]}/swagger/index.html"), "Ordering Service", HealthStatus.Degraded);
 
 var app = builder.Build();
 app.UseSerilogRequestLogging();
@@ -49,5 +57,11 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/hc", new HealthCheckOptions()
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.Run();
+
