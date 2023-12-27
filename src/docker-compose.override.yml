@@ -97,7 +97,7 @@ services:
     depends_on:
       - catalogdb
     ports:
-      - "8000:80"
+      - "8000:8080"
 
   basket.api:
     container_name: basket.api
@@ -110,7 +110,7 @@ services:
     depends_on:
       - basketdb
     ports:
-      - "8001:80"
+      - "8001:8080"
 
 
   discount.api:
@@ -122,7 +122,7 @@ services:
     depends_on:
       - discountdb
     ports:
-      - "8002:80"
+      - "8002:8080"
 
 
   discount.grpc:
@@ -150,7 +150,7 @@ services:
       - orderdb
       - rabbitmq
     ports:
-      - "8004:80"
+      - "8004:8080"
 
 
   ocelotapigateway:
@@ -164,7 +164,7 @@ services:
       - discount.api
       - ordering.api
     ports:
-      - "8010:80"
+      - "8010:8080"
 
 
   shopping.aggregator:
@@ -180,7 +180,7 @@ services:
       - basket.api
       - ordering.api
     ports:
-      - "8005:80"
+      - "8005:8080"
 
 
   healthstatus:
@@ -198,5 +198,5 @@ services:
       - HealthChecksUI__HealthChecks__4__Name=Shopping Aggregator Health Check
       - HealthChecksUI__HealthChecks__4__Uri=http://shopping.aggregator/hc
     ports:
-      - "8007:80"
+      - "8007:8080"
 
